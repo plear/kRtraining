@@ -1,4 +1,4 @@
-# Kellogg R Traings
+# Kellogg R Training
 Scripts for R Training
 
 ## We'll be using the Opportunity Insights Economic Tracker data for our examples.
