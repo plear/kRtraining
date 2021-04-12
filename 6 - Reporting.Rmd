@@ -1,0 +1,13 @@
+---
+title: "6 - Reporting"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# This is an R code chunk
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+This is a Markdown Document
+The following is inline code: 4 + 4 = `r 4 + 4`
