@@ -41,20 +41,55 @@ gather(nonTidydf, "year", "newVariableName", c("2020", "2021"))
 
 uiClaimsMi %>% 
   select(year, month, day_endofweek, stateabbrev, initclaims_count_combined) %>% 
-  unite("date", c(day_endofweek, month, year), sep="/")  # Not the best way to create a date value...more later
+  unite("date", c(day_endofweek, month, year), sep="/") 
 
 uiClaimsMi %>% 
   select(year, month, day_endofweek, stateabbrev, initclaims_count_combined) %>% 
   unite("date", c(day_endofweek, month, year), sep="/") %>% 
   separate(date, c("day", "month", "year"))   #Seperate does the opposite of unite
 
+#   Lubridate
+library(lubridate) #install.packages("lubridate")
+
+uiClaimsMi %>% 
+  select(year, month, day_endofweek, stateabbrev, initclaims_count_combined) %>% 
+  unite("date", c(day_endofweek, month, year), sep="/") %>% 
+  mutate(dateType = dmy(date)) # Functions correspond to order of string
 
 
+uiClaimsMi %>% 
+  select(year, month, day_endofweek, stateabbrev, initclaims_count_combined) %>% 
+  unite("date", c(month, year, day_endofweek), sep="/") %>% 
+  mutate(dateType = myd(date)) # Functions correspond to order of string
+  
 
+#   Case_when
+uiClaimsMi %>% 
+  select(year, month, day_endofweek, stateabbrev, initclaims_count_combined) %>%
+  mutate(Month = case_when(
+    month == 1 ~ "Jan",
+    month == 2 ~ "Feb",
+    month == 3 ~ "Mar",
+    month == 4 ~ "Apr",
+    month == 5 ~ "May",
+    month == 6 ~ "Jun",
+    month == 7 ~ "Jul",
+    month == 8 ~ "Aug",
+    month == 9 ~ "Sep",
+    month == 10 ~ "Oct",
+    month == 11 ~ "Nov",
+    month == 12 ~ "Dec"
+  )) %>% 
+  unite("date", c(Month, year, day_endofweek), sep="-") %>% 
+  mutate(dateType = myd(date)) # Functions correspond to order of string
 
 #   Joins
-#   Lubridate/stringr
-#   Case_when
+
+
 
 #   Stat functions
+
+
+
+
 
