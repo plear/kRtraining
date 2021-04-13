@@ -42,7 +42,10 @@ complex <- c(1+1i, 1+5i, 2, 3, 5)
 class(complex)
 str(complex)
 
-charToRaw("This string will be converted to a raw value")
+rawCh <- charToRaw("This string will be converted to a raw value")
+rawCh
+str(rawCh)
+rawToChar(rawCh)
 
 # Vector
 vector1 <- c("One", "One", "Two", "Three", "Five")
@@ -57,7 +60,7 @@ str(list1)
 
 list1[1]
 
-listOfLists <- list(list1, list1, list1)
+listOfLists <- list(list1, vector1, complex)
 
 listOfLists
 listOfLists[1]
@@ -70,6 +73,7 @@ matrix1 = matrix(c(1, 1, 2, 3, 5, 10), nrow = 2, ncol = 3, byrow = TRUE)
 matrix1
 str(matrix1)
 
+# Dataframes
 df <- 	data.frame(
   numbers = numbers,  # We made these vectors in the code above
   characters = characters, 
@@ -82,6 +86,9 @@ df <- 	data.frame(
 df
 str(df)
 View(df)
+
+# External library functions
+
 dplyr::glimpse(df) #dplyr function called without loading the namespace
 
 library(tidyverse)
@@ -137,6 +144,8 @@ affinity[c("year", "month")] # Creates a data frame with two columns
 # Tidyverse Functions
 select(affinity, year) # Selects year from affinity data frame
 select(affinity, year, month) # Selects year and month from affinity data frame
+select(affinity, -year, -month) # Selects everything except year and month from affinity data frame
+select(affinity, -c(year, month)) # Selects everything except year and month from affinity data frame
 
 arrange(affinity, spend_all) # Arrange affinity based on spend_all variable
 arrange(affinity, -spend_all) # Arrange affinity based on descending spend_all variable
@@ -151,6 +160,7 @@ top_frac(affinity, -.01, spend_all) # Select bottom one percent of observations 
 sample_n(affinity, 10, replace = TRUE) # Sample 10 observations from datafrane w/ replacement
 sample_frac(affinity, .10, replace = TRUE) # Sample 10 percent of observations from datafrane w/ replacement
 
+# Helper functions
 select(affinity, contains("spend")) # Select all columns contain "spend" in the name
 select(affinity, starts_with("state")) # Select all columns that start with "state"
 select(affinity, ends_with("grocery")) # Select all columns that end in "grocery"
@@ -158,8 +168,6 @@ select(affinity, matches(".all.")) # Matches regular expression
 select(affinity, matches(".all")) # Matches regular expression
 select(affinity, year:freq) # Selects all columns between and including year and freq
 select(affinity, 1:4) # Selects all columns between and including 1st and 4th
-select(affinity, -spend_all) # Selects all columns except spend_all
-select(affinity, -c(spend_all, spend_tws)) # Selects all columns except spend_all and spend_tws
 
 # Filtering data
 filter(affinity, year == 2021)  # Equal
