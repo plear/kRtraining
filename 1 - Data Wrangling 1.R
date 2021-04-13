@@ -1,4 +1,11 @@
-#   Data structures and types in R
+###############################################################################
+# 1 - Data Wranglin 1
+###############################################################################
+
+
+#==============================================================================
+# 1.1 - Data structures and types in R
+#==============================================================================
 str
 ?str
 
@@ -60,7 +67,10 @@ dplyr::glimpse(df) #dplyr function called without loading the dataspace
 library(tidyverse)
 glimpse(df) #dplyr function in the tidyverse package
 
-# Dataframe vs tibble
+#==============================================================================
+# 1.2 - Dataframes vs tibbles
+#==============================================================================
+
 # Import data from data folder
 affinityDataFrame <- read.csv("data/Affinity - State - Daily.csv") # Base R import
 affinityTibble <- read_csv("data/Affinity - State - Daily.csv") # Tidyverse import
@@ -94,7 +104,9 @@ affinity <- read_csv("data/Affinity - State - Daily.csv",
     spend_retail_no_grocery = col_double()),
   na = "NA")
 
-
+#==============================================================================
+# 1.3 - Dataframe manipulation
+#==============================================================================
 
 #   Selecting columns in df
 affinity["year"] # Base R
@@ -155,7 +167,10 @@ chartGrocery <- transmute(affinity, year, month, day, statefips, grocery = spend
 top_n(chartGrocery, 5, grocery)
 
 
-#   Pipes
+#==============================================================================
+# 1.4 - Data recipes
+#==============================================================================
+
 stateIDs <- read_csv("data/GeoIDs - State.csv")
 MI <- filter(stateIDs, statename == "Michigan")
 
@@ -167,7 +182,7 @@ MI_chartGrocery <- transmute(MI_affinity, year, month, day, statefips, grocery =
 MI_chartGrocery2 <- transmute(filter(affinity, statefips == filter(stateIDs, statename == "Michigan")$statefips), 
   year, month, day, statefips, grocery = spend_grf * 100)
 
-
+#   Pipes
 # %>%   Create with Ctrl-Shft-M
 affinity %>% 
   filter(., statefips == filter(stateIDs, statename == "Michigan")$statefips) %>% 
