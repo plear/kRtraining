@@ -25,6 +25,15 @@ factors <- factor(alsoCharacters, levels = numLevels)
 class(factors)
 str(factors)
 
+object.size(alsoCharacters)
+object.size(factors)
+
+testChars <- c(alsoCharacters, alsoCharacters, alsoCharacters, alsoCharacters, alsoCharacters, alsoCharacters)
+testFactors <-c(factors, factors, factors, factors, factors, factors)
+
+object.size(testChars)
+object.size(testFactors)
+
 logical <- c(TRUE, TRUE, FALSE, FALSE, FALSE)
 class(logical)
 str(logical)
@@ -46,7 +55,17 @@ list1 <- list("One", "One", 2, 3, 5)
 list1
 str(list1)
 
-Matrix # Matrices can only handle one data type
+list1[1]
+
+listOfLists <- list(list1, list1, list1)
+
+listOfLists
+listOfLists[1]
+listOfLists[1][[1]]
+listOfLists[1][[1]][1]
+
+
+# Matrices can only handle one data type
 matrix1 = matrix(c(1, 1, 2, 3, 5, 10), nrow = 2, ncol = 3, byrow = TRUE)
 matrix1
 str(matrix1)
@@ -62,7 +81,8 @@ df <- 	data.frame(
 
 df
 str(df)
-dplyr::glimpse(df) #dplyr function called without loading the dataspace
+View(df)
+dplyr::glimpse(df) #dplyr function called without loading the namespace
 
 library(tidyverse)
 glimpse(df) #dplyr function in the tidyverse package
@@ -74,9 +94,6 @@ glimpse(df) #dplyr function in the tidyverse package
 # Import data from data folder
 affinityDataFrame <- read.csv("data/Affinity - State - Daily.csv") # Base R import
 affinityTibble <- read_csv("data/Affinity - State - Daily.csv") # Tidyverse import
-
-glimpse(affinityDataFrame)  # defaults to import strings as factors
-glimpse(affinityTibble) # defaults to import strings as strings
 
 str(affinityDataFrame)
 str(affinityTibble)
@@ -108,34 +125,31 @@ affinity <- read_csv("data/Affinity - State - Daily.csv",
 # 1.3 - Dataframe manipulation
 #==============================================================================
 
-#   Selecting columns in df
-affinity["year"] # Base R
+#   Selecting columns in df - Base R
+affinity["year"] # Creates a data frame with one column 
 str(affinity["year"])
 
 affinity$year # Creates a vector
 str(affinity$year)
 
-affinity[c("year", "month")] # Base R
+affinity[c("year", "month")] # Creates a data frame with two columns 
 
 # Tidyverse Functions
-select(affinity, year)
-select(affinity, year)
-select(affinity, year, month)
+select(affinity, year) # Selects year from affinity data frame
+select(affinity, year, month) # Selects year and month from affinity data frame
 
-top_n(affinity, 5, spend_all)
-top_n(affinity, -5, spend_all)
+arrange(affinity, spend_all) # Arrange affinity based on spend_all variable
+arrange(affinity, -spend_all) # Arrange affinity based on descending spend_all variable
+arrange(affinity, desc(spend_all)) # Arrange affinity based on descending spend_all variable
 
-arrange(affinity, spend_all)
-arrange(affinity, -spend_all)
-arrange(affinity, desc(spend_all))
+top_n(affinity, 5, spend_all) # Select top five observations based on spend_all
+top_n(affinity, -5, spend_all) # Select bottom five observations based on spend_all
 
-top_frac(affinity, .01, spend_all)
-top_frac(affinity, -.01, spend_all)
+top_frac(affinity, .01, spend_all) # Select top one percent of observations based on spend_all
+top_frac(affinity, -.01, spend_all) # Select bottom one percent of observations based on spend_all
 
-sample_n(affinity, 10, replace = TRUE)
-sample_frac(affinity, .10, replace = TRUE)
-
-arrange(affinity, spend_all)
+sample_n(affinity, 10, replace = TRUE) # Sample 10 observations from datafrane w/ replacement
+sample_frac(affinity, .10, replace = TRUE) # Sample 10 percent of observations from datafrane w/ replacement
 
 select(affinity, contains("spend")) # Select all columns contain "spend" in the name
 select(affinity, starts_with("state")) # Select all columns that start with "state"
@@ -159,12 +173,11 @@ filter(affinity, year == 2021 & day >= 31) # Two conditions - and
 filter(affinity, year == 2021 | day >= 31) # Two conditions - or
 
 #   Mutate/transmute
-
-Grocery <- mutate(affinity, grocery = spend_grf * 100)
+Grocery <- mutate(affinity, grocery = spend_grf * 100)  # Creates grocery variable
 top_n(Grocery, 5, grocery)
 
-chartGrocery <- transmute(affinity, year, month, day, statefips, grocery = spend_grf * 100)
-top_n(chartGrocery, 5, grocery)
+chartGrocery <- transmute(affinity, year, month, day, statefips, grocery = spend_grf * 100) # Select + mututate
+top_n(chartGrocery, 5, grocery)  # Select top 5 observations based on grocery variable
 
 
 #==============================================================================
@@ -177,7 +190,6 @@ MI <- filter(stateIDs, statename == "Michigan")
 MI_affinity <- filter(affinity, statefips == MI$statefips)
 
 MI_chartGrocery <- transmute(MI_affinity, year, month, day, statefips, grocery = spend_grf * 100)
-
 
 MI_chartGrocery2 <- transmute(filter(affinity, statefips == filter(stateIDs, statename == "Michigan")$statefips), 
   year, month, day, statefips, grocery = spend_grf * 100)
