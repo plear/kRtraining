@@ -14,13 +14,17 @@
 1/25 == 0.04
 "Hello" == "hello"
 
+`+`
 ?`+`
+
+`==`
 ?`==`
 
 # Storing values
 five <- 5
 six = 6
 7 -> seven
+eight = 8
 eleven = five + six
 
 x <- 2
@@ -31,9 +35,11 @@ y <- y + 1   # Changing y does not impact previously ran function of x + y
 z
 
 # Functions
-
 str
 ?str
+
+class
+?class
 
 class(5)
 class("Hello")
@@ -41,6 +47,7 @@ class(5 + 5)
 
 
 # Storing multiple values
+c
 ?c
 
 numbers <- c(1, 1, 2, 3, 5)
@@ -62,8 +69,11 @@ str(factors)
 object.size(alsoCharacters)
 object.size(factors)
 
-testChars <- c(alsoCharacters, alsoCharacters, alsoCharacters, alsoCharacters, alsoCharacters, alsoCharacters)
-testFactors <-c(factors, factors, factors, factors, factors, factors)
+testChars <- c(alsoCharacters, alsoCharacters, alsoCharacters, alsoCharacters, alsoCharacters, alsoCharacters, alsoCharacters, alsoCharacters)
+testFactors <-c(factors, factors, factors, factors, factors, factors, factors, factors)
+
+str(testChars)
+str(testFactors)
 
 object.size(testChars)
 object.size(testFactors)
@@ -85,6 +95,7 @@ rawToChar(rawCh)
 vector1 <- c("One", "One", "Two", "Three", "Five")
 vector2 <- c(1, 1, 2, 3, 5)
 vector3 <- c("One", "One", 2, 3, 5)
+str(vector1)
 str(vector3)  # Vectors can only handle one data type
 
 # List
@@ -94,7 +105,7 @@ str(list1)
 
 list1[1]
 
-listOfLists <- list(list1, vector1, complex)
+listOfLists <- list(list1, list1, vector1, complex)
 
 listOfLists
 listOfLists[1]
@@ -103,9 +114,12 @@ listOfLists[1][[1]][1]
 
 
 # Matrices can only handle one data type
-matrix1 = matrix(c(1, 1, 2, 3, 5, 10), nrow = 2, ncol = 3, byrow = TRUE)
+matrix1 = matrix(c(1, 1, 2, 3, 5, 10, 2, 3, 5), nrow = 3, ncol = 3, byrow = TRUE)
+matrix2 = matrix(c(1, 1, 2, 3, 5, 10, 2, 3, 5), nrow = 1, ncol = 9, byrow = TRUE)
 matrix1
+matrix2
 str(matrix1)
+str(matrix2)
 
 # Dataframes
 df <- 	data.frame(
@@ -175,7 +189,7 @@ str(affinity$year)
 
 affinity[c("year", "month")] # Creates a data frame with two columns 
 
-# Tidyverse Functions
+# Tidyverse Functions - dplyr verbs
 select(affinity, year) # Selects year from affinity data frame
 select(affinity, year, month) # Selects year and month from affinity data frame
 select(affinity, -year, -month) # Selects everything except year and month from affinity data frame
@@ -248,7 +262,15 @@ affinity %>% # We don't need to reference the data parameter if we don't want to
   transmute(year, month, day, statefips, grocery = spend_grf * 100) %>% 
   filter(!is.na(grocery))
 
+affinity2 <- affinity %>% # Storting operation into data frame
+  filter(statefips == filter(stateIDs, statename == "Michigan")$statefips) %>% 
+  transmute(year, month, day, statefips, grocery = spend_grf * 100) %>% 
+  filter(!is.na(grocery))
   
+affinity %>% 
+  filter(statefips == filter(stateIDs, statename == "Michigan")$statefips) %>% 
+  transmute(year, month, day, statefips, grocery = spend_grf * 100) %>% 
+  filter(!is.na(grocery)) -> affinity2 # Storting operation into data frame
   
 
 
