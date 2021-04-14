@@ -253,6 +253,7 @@ MI_chartGrocery2 <- transmute(filter(affinity, statefips == filter(stateIDs, sta
   year, month, day, statefips, grocery = spend_grf * 100)
 
 #   Pipes
+# f(g(t())) == t() %>% g() %>% f()
 # %>%   Create with Ctrl-Shft-M
 affinity %>% 
   filter(., statefips == filter(stateIDs, statename == "Michigan")$statefips) %>% 
@@ -264,7 +265,7 @@ affinity %>% # We don't need to reference the data parameter if we don't want to
   transmute(year, month, day, statefips, grocery = spend_grf * 100) %>% 
   filter(!is.na(grocery))
 
-affinity2 <- affinity %>% # Storting operation into data frame
+affinity2 <- affinity %>% # Storing operation into data frame
   filter(statefips == filter(stateIDs, statename == "Michigan")$statefips) %>% 
   transmute(year, month, day, statefips, grocery = spend_grf * 100) %>% 
   filter(!is.na(grocery))
@@ -272,7 +273,7 @@ affinity2 <- affinity %>% # Storting operation into data frame
 affinity %>% 
   filter(statefips == filter(stateIDs, statename == "Michigan")$statefips) %>% 
   transmute(year, month, day, statefips, grocery = spend_grf * 100) %>% 
-  filter(!is.na(grocery)) -> affinity2 # Storting operation into data frame
+  filter(!is.na(grocery)) -> affinity2 # Storing operation into data frame
   
 
 
