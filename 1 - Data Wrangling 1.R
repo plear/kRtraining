@@ -4,10 +4,44 @@
 
 
 #==============================================================================
-# 1.1 - Data structures and types in R
+# 1.1 - Operators, functions, data structures and types in R
 #==============================================================================
+
+# Operators - arithmetic & relational
+1 + 2
++5
+3%%10
+1/25 == 0.04
+"Hello" == "hello"
+
+?`+`
+?`==`
+
+# Storing values
+five <- 5
+six = 6
+7 -> seven
+eleven = five + six
+
+x <- 2
+y <- 3
+z <- x + y
+z
+y <- y + 1   # Changing y does not impact previously ran function of x + y
+z
+
+# Functions
+
 str
 ?str
+
+class(5)
+class("Hello")
+class(5 + 5)
+
+
+# Storing multiple values
+?c
 
 numbers <- c(1, 1, 2, 3, 5)
 class(numbers)
