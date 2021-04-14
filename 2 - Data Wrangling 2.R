@@ -1,7 +1,17 @@
+###############################################################################
+# 2 - Data Wrangling 2
+###############################################################################
+
 library(tidyverse)
+
+#==============================================================================
+# 2.0 - Import and view data
+#==============================================================================
 
 unemploymentClaims <- read_csv("data/UI Claims - State - Weekly.csv")
 GeoIDs <- read_csv("data/GeoIDs - State.csv")
+
+glimpse(unemploymentClaims)
 
 obsIssue <- problems(unemploymentClaims) %>% 
   select(row) %>% 
@@ -11,15 +21,72 @@ colIssue <- problems(unemploymentClaims) %>%
   select(col) %>% 
   distinct()
 
-unemploymentClaims[obsIssue$row,] %>% View()
+unemploymentClaims[obsIssue$row, colIssue$col] %>% View()
 
-# Simple joins of two tables - we'll revist more complex joins later
+#==============================================================================
+# 2.1 - Joining two data frames
+#==============================================================================
+x <- tribble(
+  ~V1, ~K,
+  "a",   "Q",
+  "b",   "W",
+  "c",   "E",
+  "f",   "T"
+)
+
+y <- tribble(
+  ~V2, ~K,
+  "A",   "Q",
+  "B",   "W",
+  "C",   "E",
+  "D",   "R"
+)
+
+# Basic Joins
+inner_join(x, y, by = "K")
+full_join(x, y, by = "K")
+
+# Primary table joins
+left_join(x, y, by = "K")
+right_join(x, y, by = "K")
+
+# Filtering joins
+semi_join(x, y, by = "K")
+anti_join(x, y, by = "K")
+
+# Nested join example
+z <- tribble(
+  ~V2, ~K,
+  "A",   "Q",
+  "B",   "Q",
+  "C",   "E",
+  "D",   "E"
+)
+
+nest_join(x, z, by = "K")
+
+# Application with our data
+
+# Left join example
 unemploymentClaims %>% left_join(GeoIDs)
 
 unemploymentClaims %>% left_join(GeoIDs, by = "statefips")
 
-uiClaimsMi <- unemploymentClaims %>% left_join(GeoIDs %>% select(statefips, stateabbrev), by = "statefips") %>% 
+uiClaimsMi <- unemploymentClaims %>% 
+  left_join(GeoIDs, by = "statefips") %>% 
+  select(statefips, stateabbrev) %>% 
   filter(stateabbrev == "MI")
+
+glimpse(uiClaimsMi)
+
+# Right join example
+GeoIDs %>% 
+  filter(stateabbrev == "MI") %>% 
+  right_join(unemploymentClaims, by = "statefips")
+
+#==============================================================================
+# 2.2 - Grouping and summarizing data
+#==============================================================================
 
 # Basic grouping/summarizing
 uiClaimsMi %>% 
@@ -28,6 +95,29 @@ uiClaimsMi %>%
 monthlyClaimsMi <- uiClaimsMi %>% 
   group_by(year, month, stateabbrev) %>% 
   summarize(initclaims = sum(initclaims_count_combined, na.rm=TRUE))
+
+monthlyClaimsMi
+
+monthlyClaimsMiStats <- uiClaimsMi %>% 
+  group_by(year, month, stateabbrev) %>% 
+  summarize(
+    Min_initclaims = min(initclaims_count_combined, na.rm=TRUE),
+    Median_initclaims = median(initclaims_count_combined, na.rm=TRUE),
+    Mean_initclaims = mean(initclaims_count_combined, na.rm=TRUE),
+    Max_initclaims = max(initclaims_count_combined, na.rm=TRUE),
+    Sd_initclaims = sd(initclaims_count_combined, na.rm=TRUE),
+    )
+
+unemploymentClaims %>% 
+  left_join(GeoIDs, by = "statefips") %>% 
+  group_by(stateabbrev) %>% 
+  count()
+
+
+#==============================================================================
+# 2.3 - Tidy data
+#==============================================================================
+# https://vita.had.co.nz/papers/tidy-data.pdf
 
 #  Tidy functions
 spread(monthlyClaimsMi, year, initclaims)
@@ -48,7 +138,10 @@ uiClaimsMi %>%
   unite("date", c(day_endofweek, month, year), sep="/") %>% 
   separate(date, c("day", "month", "year"))   #Seperate does the opposite of unite
 
-#   Lubridate
+#==============================================================================
+# 2.4 - Handling data and time values
+#==============================================================================
+#   Lubridate - helps handle data and time variables
 library(lubridate) #install.packages("lubridate")
 
 uiClaimsMi %>% 
@@ -62,7 +155,9 @@ uiClaimsMi %>%
   unite("date", c(month, year, day_endofweek), sep="/") %>% 
   mutate(dateType = myd(date)) # Functions correspond to order of string
   
-
+#==============================================================================
+# 2.5 - Creating case values
+#==============================================================================
 #   Case_when
 uiClaimsMi %>% 
   select(year, month, day_endofweek, stateabbrev, initclaims_count_combined) %>%
@@ -83,11 +178,12 @@ uiClaimsMi %>%
   unite("date", c(Month, year, day_endofweek), sep="-") %>% 
   mutate(dateType = myd(date)) # Functions correspond to order of string
 
-#   Joins
+#==============================================================================
+# 2.6 - Advanced joins
+#==============================================================================
 
 
 
-#   Stat functions
 
 
 
