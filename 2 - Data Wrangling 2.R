@@ -105,7 +105,7 @@ monthlyClaimsMiStats <- uiClaimsMi %>%
     Median_initclaims = median(initclaims_count_combined, na.rm=TRUE),
     Mean_initclaims = mean(initclaims_count_combined, na.rm=TRUE),
     Max_initclaims = max(initclaims_count_combined, na.rm=TRUE),
-    Sd_initclaims = sd(initclaims_count_combined, na.rm=TRUE),
+    Sd_initclaims = sd(initclaims_count_combined, na.rm=TRUE)
     )
 
 unemploymentClaims %>% 
