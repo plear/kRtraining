@@ -229,9 +229,11 @@ filter(affinity, year == 2021 & day >= 31) # Two conditions - and
 filter(affinity, year == 2021 | day >= 31) # Two conditions - or
 
 #   Mutate/transmute
-Grocery <- mutate(affinity, grocery = spend_grf * 100)  # Creates grocery variable
+mutate(affinity, grocery = spend_grf * 100)  # Creates grocery variable
+Grocery <- mutate(affinity, grocery = spend_grf * 100)
 top_n(Grocery, 5, grocery)
 
+transmute(affinity, year, month, day, statefips, grocery = spend_grf * 100) # Select + mututate
 chartGrocery <- transmute(affinity, year, month, day, statefips, grocery = spend_grf * 100) # Select + mututate
 top_n(chartGrocery, 5, grocery)  # Select top 5 observations based on grocery variable
 
