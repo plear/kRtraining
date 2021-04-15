@@ -136,7 +136,7 @@ uiClaimsMi %>%
 uiClaimsMi %>% 
   select(year, month, day_endofweek, stateabbrev, initclaims_count_combined) %>% 
   unite("date", c(day_endofweek, month, year), sep="/") %>% 
-  separate(date, c("day", "month", "year"))   #Seperate does the opposite of unite
+  separate(date, c("day", "month", "year"))   #Separate does the opposite of unite
 
 #==============================================================================
 # 2.4 - Handling data and time values
@@ -179,7 +179,7 @@ uiClaimsMi %>%
   mutate(dateType = myd(date)) # Functions correspond to order of string
 
 #==============================================================================
-# 2.6 - Advanced joins
+# 2.6 - 
 #==============================================================================
 
 
