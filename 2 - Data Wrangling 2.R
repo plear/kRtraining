@@ -63,7 +63,41 @@ z <- tribble(
   "D",   "E"
 )
 
+
 nest_join(x, z, by = "K")
+
+# Multi-key Joins
+q <- tribble(
+  ~V1,   ~K1,  ~K2,
+  "a",   "Q",  1,
+  "b",   "W",  1,
+  "c",   "E",  2,
+  "f",   "T",  2
+)
+
+w <- tribble(
+  ~V2,   ~K1,  ~key2,
+  "A",   "Q", 1,
+  "B",   "W", 2,
+  "C",   "E", 1,
+  "D",   "R", 2
+)
+
+# Joining without specifying second key
+inner_join(q, w, by = "K1")
+full_join(q, w, by = "K1")
+
+# Joingin on two keys
+inner_join(q, w, by = c("K1", "K2" = "key2"))
+full_join(q, w, by = c("K1", "K2" = "key2"))
+
+# Primary table joins
+left_join(q, w, by = c("K1", "K2" = "key2"))
+right_join(q, w, by = c("K1", "K2" = "key2"))
+
+# Filtering joins
+semi_join(q, w, by = c("K1", "K2" = "key2"))
+anti_join(q, w, by = c("K1", "K2" = "key2"))
 
 # Application with our data
 
@@ -179,9 +213,52 @@ uiClaimsMi %>%
   mutate(dateType = myd(date)) # Functions correspond to order of string
 
 #==============================================================================
-# 2.6 - 
+# 2.6 - Stringr
 #==============================================================================
 
+
+upcList <- x <- c("0038000673009", 
+                  "038000321108", 
+                  "038000310102", 
+                  "038000596445", 
+                  "038000001109", 
+                  "38000111792", 
+                  "038000391187", 
+                  "038000327476", 
+                  "0038000301100", 
+                  "38000094562"
+  )
+
+str_length(upcList) 
+
+str_detect(upcList, "4")   # Returns vector all strings with "4" marked as TRUE
+str_detect(upcList, "44")   # Returns vector all strings with "44" marked as TRUE
+
+str_count(upcList, "4")    # Returns vector all strings with the count of "4"'s in each string
+str_subset(upcList, "4")   # Returns vector strings with at least 1 "4"'
+str_locate(upcList, "4")   # Returns position of the matches
+
+str_extract(upcList, "4")
+str_match(upcList, "4")
+str_match(upcList, "44")
+
+str_pad("38000094569", 12, side = "left", pad="0")  # Adds 0 to left side to make length 12
+str_trim(" 38000094569 ") # Removes outside white spaces
+str_trunc("0038000094569", 12, side = "left", "") # Truncates to length 12 truncating left side
+
+
+# Converting all UPCs to same length string
+
+upc_df <- as_tibble(upcList) %>% rename(UPC = value)
+
+str_length(upc_df$UPC) 
+
+upc_df %>% 
+  mutate(UPC_Fixed = case_when(
+    str_length(UPC) > 12 ~ str_trunc(UPC, 12, side = "left", ""),
+    str_length(UPC) == 12 ~ UPC,
+    str_length(UPC) < 12 ~ str_pad(UPC, 12, side = "left", pad="0")
+  )) 
 
 
 
