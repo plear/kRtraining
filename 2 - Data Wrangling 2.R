@@ -43,16 +43,16 @@ y <- tribble(
 )
 
 # Basic Joins
-inner_join(x, y, by = "K")
-full_join(x, y, by = "K")
+inner_join(x, y, by = "K") # return all rows from x where there are matching values in y, and all columns from x and y. If there are multiple matches between x and y, all combination of the matches are returned.
+full_join(x, y, by = "K") # return all rows and all columns from both x and y. Where there are not matching values, returns NA for the one missing.
 
 # Primary table joins
-left_join(x, y, by = "K")
-right_join(x, y, by = "K")
+left_join(x, y, by = "K") # return all rows from x, and all columns from x and y. Rows in x with no match in y will have NA values in the new columns. If there are multiple matches between x and y, all combinations of the matches are returned.
+right_join(x, y, by = "K") # return all rows from y, and all columns from x and y. Rows in y with no match in x will have NA values in the new columns. If there are multiple matches between x and y, all combinations of the matches are returned.
 
 # Filtering joins
-semi_join(x, y, by = "K")
-anti_join(x, y, by = "K")
+semi_join(x, y, by = "K") # semi_join() return all rows from x with a match in y
+anti_join(x, y, by = "K") # anti_join() return all rows from x without a match in y
 
 # Nested join example
 z <- tribble(
@@ -108,7 +108,7 @@ unemploymentClaims %>% left_join(GeoIDs, by = "statefips")
 
 uiClaimsMi <- unemploymentClaims %>% 
   left_join(GeoIDs, by = "statefips") %>% 
-  select(statefips, stateabbrev) %>% 
+  select(statefips, stateabbrev, year, month, initclaims_count_combined) %>% 
   filter(stateabbrev == "MI")
 
 glimpse(uiClaimsMi)
@@ -126,11 +126,10 @@ GeoIDs %>%
 uiClaimsMi %>% 
   group_by(year, month, stateabbrev)
 
+# Summarize is used in conjunction with group_by to aggregate and calculate summaries for groups within the data
 monthlyClaimsMi <- uiClaimsMi %>% 
   group_by(year, month, stateabbrev) %>% 
   summarize(initclaims = sum(initclaims_count_combined, na.rm=TRUE))
-
-monthlyClaimsMi
 
 monthlyClaimsMiStats <- uiClaimsMi %>% 
   group_by(year, month, stateabbrev) %>% 
@@ -140,8 +139,15 @@ monthlyClaimsMiStats <- uiClaimsMi %>%
     Mean_initclaims = mean(initclaims_count_combined, na.rm=TRUE),
     Max_initclaims = max(initclaims_count_combined, na.rm=TRUE),
     Sd_initclaims = sd(initclaims_count_combined, na.rm=TRUE)
-    )
+  )
 
+
+# You can use mutate instead of summarise if you want to calculate an aggregate level value but still want to retain all of the original rows
+monthlyClaimsMi_granular <- uiClaimsMi %>% 
+  group_by(year, month, stateabbrev) %>% 
+  mutate(initclaims = sum(initclaims_count_combined, na.rm=TRUE))
+
+# Like summarize, count is often useful for providing an aggregate view of records belonging to a group(s)
 unemploymentClaims %>% 
   left_join(GeoIDs, by = "statefips") %>% 
   group_by(stateabbrev) %>% 
@@ -154,12 +160,17 @@ unemploymentClaims %>%
 # https://vita.had.co.nz/papers/tidy-data.pdf
 
 #  Tidy functions
-spread(monthlyClaimsMi, year, initclaims)
+pivot_wider(monthlyClaimsMi, names_from = year, values_from = initclaims)
 
-spread(monthlyClaimsMi, month, initclaims)
+pivot_wider(monthlyClaimsMi, names_from = month, values_from = initclaims)
+
+# spread has been replaced by pivot_wider
+# spread(monthlyClaimsMi, year, initclaims)
+# spread(monthlyClaimsMi, month, initclaims)
 
 nonTidydf <- spread(monthlyClaimsMi, year, initclaims)
 
+# gather has been replaced by pivot_longer()
 gather(nonTidydf, "year", "newVariableName", 3:4)
 gather(nonTidydf, "year", "newVariableName", c("2020", "2021"))
 
@@ -188,7 +199,7 @@ uiClaimsMi %>%
   select(year, month, day_endofweek, stateabbrev, initclaims_count_combined) %>% 
   unite("date", c(month, year, day_endofweek), sep="/") %>% 
   mutate(dateType = myd(date)) # Functions correspond to order of string
-  
+
 #==============================================================================
 # 2.5 - Creating case values
 #==============================================================================
@@ -218,16 +229,16 @@ uiClaimsMi %>%
 
 
 upcList <- x <- c("0038000673009", 
-                  "038000321108", 
-                  "038000310102", 
-                  "038000596445", 
-                  "038000001109", 
-                  "38000111792", 
-                  "038000391187", 
-                  "038000327476", 
-                  "0038000301100", 
-                  "38000094562"
-  )
+  "038000321108", 
+  "038000310102", 
+  "038000596445", 
+  "038000001109", 
+  "38000111792", 
+  "038000391187", 
+  "038000327476", 
+  "0038000301100", 
+  "38000094562"
+)
 
 str_length(upcList) 
 
@@ -259,10 +270,3 @@ upc_df %>%
     str_length(UPC) == 12 ~ UPC,
     str_length(UPC) < 12 ~ str_pad(UPC, 12, side = "left", pad="0")
   )) 
-
-
-
-
-
-
-
