@@ -25,6 +25,17 @@ ggplot(data=diamonds, aes(x=carat, y=price, color=cut)) +
 ggplot(data=diamonds, aes(x=carat, y=price)) +
   geom_point(color="red")
 
+# Add third variable as a shape
+ggplot(data=diamonds, aes(x=carat, y=price, shape=cut)) +
+  geom_point()
+
+# Alpha
+ggplot(data=diamonds, aes(x=carat, y=price, alpha=cut)) +
+  geom_point()
+
+ggplot(data=diamonds, aes(x=carat, y=price, color=cut)) +
+  geom_point(alpha=0.25)
+
 ### One variable geoms with continuous variables ###############################
 # View distribution with geom_density
 ggplot(data=diamonds, aes(x=price)) +
@@ -128,10 +139,32 @@ ggplot(data=diamonds, aes(x=carat, y=price, color = cut)) +
   geom_smooth() +
   geom_rug()
 
+### Faceting ###########################
+ggplot(data=diamonds, aes(x=price, color=cut)) +
+  geom_density()
+
+ggplot(data=diamonds, aes(x=price)) +
+  geom_density() + 
+  facet_grid(cols = vars(cut))
+
+ggplot(data=diamonds, aes(x=price)) +
+  geom_density() + 
+  facet_grid(rows = vars(cut))
+
+ggplot(data=diamonds, aes(x=price)) +
+  geom_density() + 
+  facet_grid(rows = vars(color), cols = vars(clarity))
+
+ggplot(data=diamonds, aes(x=price, fill=cut)) +
+  geom_density() + 
+  facet_grid(rows = vars(color), cols = vars(clarity))
+
+ggplot(data=diamonds, aes(x=price, fill=cut)) +
+  geom_density() +   
+  facet_wrap(vars(clarity))
 
 
-
-### Labeling, legends and transformations ###########################
+### Labeling ###########################
 economics %>% glimpse()
 
 plot1 <- ggplot(economics, aes(x=date, y=uempmed)) +
@@ -158,9 +191,51 @@ plot2 +
     x ="Date", y = "Unemployment Rate", color="Personal Savings Rate") + 
   theme(legend.position="bottom")
 
+plot2 +
+  labs(title="Unemployment Rate Trend",
+    x ="Date", y = "Unemployment Rate", color="Personal Savings Rate") + 
+  theme(legend.position="bottom") +
+  scale_color_gradient(low="red", high="green")
+
+plot2 +
+  labs(title="Unemployment Rate Trend",
+    x ="Date", y = "Unemployment Rate", color="Personal Savings Rate") + 
+  theme(legend.position="bottom") +
+  scale_color_gradient2(low="red", high="green", mid = "yellow", midpoint = mean(economics$psavert)) 
 
 
+plot3 <- plot2 +
+  labs(title="Unemployment Rate Trend",
+    x ="Date", y = "Unemployment Rate", color="Personal Savings Rate") + 
+  theme(legend.position="bottom") +
+  scale_color_gradient2(low="red", high="green", mid = "yellow", midpoint = mean(economics$psavert)) 
 
+
+### Scales #####################################################################
+
+plot3 +
+  scale_x_date(date_labels = "%Y (%b)")
+
+plot4 <- ggplot(economics, aes(x=uempmed, y=psavert)) +
+  geom_point()  +
+  geom_smooth(method="lm")
+
+plot4
+
+plot4 +
+  scale_x_sqrt()
+
+plot4 + 
+  scale_x_log10()
+
+plot4 + 
+  scale_x_log10() +
+  scale_y_continuous(limits = c(0, 20))
+
+plot4 + 
+  scale_y_continuous(
+  breaks = c(5, 10, 15), label = c("Some", "A Little", "A Lot")
+  )
 
 
 
