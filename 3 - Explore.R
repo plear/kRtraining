@@ -249,16 +249,32 @@ glimpse(gMob)
 gMob2 <- gMob %>% 
   mutate(date = lubridate::mdy(paste(month, day,year, "-")))
 
-
 ggplot(data=gMob2, aes(x=date, y=gps_workplaces)) +
-  geom_line()
+  geom_point() +
+  geom_smooth()
 
-ggplot(data=gMob2, aes(x=factor(lubridate::month(date)), y=gps_workplaces)) +
+
+ggplot(data=gMob2, aes(x=date, y=gps_workplaces, color=factor(statefips))) +
+  geom_point(alpha=0.25) +
+  geom_smooth(alpha=0.75, se=FALSE) +
+  theme(legend.position="none")
+
+ggplot(data=gMob2, aes(x=factor(lubridate::quarter(date, with_year = TRUE)), y=gps_workplaces)) +
   geom_boxplot()
 
+ggplot(data=gMob2, aes(x=factor(lubridate::quarter(date, with_year = TRUE)), y=gps_workplaces)) +
+  geom_boxplot() +
+  geom_violin(alpha=0.5)
 
-ggplot(data=gMob2, aes(x=factor(month), y=gps_workplaces, color=year)) +
-  geom_boxplot()
+ggplot(data=gMob2) +
+  geom_boxplot(aes(x=factor(lubridate::quarter(date, with_year = TRUE)), y=gps_workplaces), color="blue") +
+  geom_boxplot(aes(x=factor(lubridate::quarter(date, with_year = TRUE)), y=gps_grocery_and_pharmacy), color="red")
 
-ggplot(data=gMob2, aes(x=factor(month), y=gps_workplaces, color=factor(year))) +
-  geom_boxplot()
+ggplot(data=gMob2) +
+  geom_point(aes(x=date, y=gps_workplaces), color="blue", alpha=.5) +
+  geom_point(aes(x=date, y=gps_grocery_and_pharmacy), color="red", alpha=.5)
+
+
+
+
+
