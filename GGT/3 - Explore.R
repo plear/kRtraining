@@ -17,8 +17,14 @@ ggplot(data=diamonds, aes(x=carat, y=price))
 ggplot(data=diamonds, aes(x=carat, y=price)) +
   geom_point()
 
+ggplot(data=diamonds) +
+  geom_point(aes(x=carat, y=price))
+
 # Add third variable as a color
 ggplot(data=diamonds, aes(x=carat, y=price, color=cut)) +
+  geom_point()
+
+ggplot(data=diamonds, aes(x=carat, y=price, shape=cut, color=carat)) +
   geom_point()
 
 # Color outside aesthetics
@@ -159,6 +165,11 @@ ggplot(data=diamonds, aes(x=price, fill=cut)) +
   geom_density() + 
   facet_grid(rows = vars(color), cols = vars(clarity))
 
+ggplot(data=diamonds, aes(x=price, y=depth, fill=cut)) +
+  geom_point() + 
+  facet_grid(rows = vars(color), cols = vars(clarity)) +
+  geom_smooth()
+
 ggplot(data=diamonds, aes(x=price, fill=cut)) +
   geom_density() +   
   facet_wrap(vars(clarity))
@@ -177,7 +188,6 @@ plot1 +
 plot1 +
   labs(title="Unemployment Rate Trend",
     x ="Date", y = "Unemployment Rate")
-
 
 plot2 <- ggplot(economics, aes(x=date, y=uempmed, color=psavert)) +
   geom_line()
