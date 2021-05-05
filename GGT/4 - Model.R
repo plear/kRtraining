@@ -1,9 +1,10 @@
 ### Model ######################################################################
 library(tidyverse)
-library(broom)
 
+# install.packages("broom")
+# install.packages("rpart")
+library(broom)
 library(rpart)
-library(tidymodels)
 
 diamonds %>% glimpse()
 
@@ -209,3 +210,5 @@ diamondsDims <- diamonds %>%
 
 kCut <- kmeans(diamondsDims, 5, nstart = 25)
 kCut
+
+
