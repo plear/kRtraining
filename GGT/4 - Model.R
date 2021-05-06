@@ -211,4 +211,31 @@ diamondsDims <- diamonds %>%
 kCut <- kmeans(diamondsDims, 5, nstart = 25)
 kCut
 
+exampleDims <- bind_cols(diamondsDims, cluster = kCut$cluster)
+
+ggplot(exampleDims, aes(x=x, y=y, color=z, size=table)) +
+  geom_point(alpha=0.25)
+
+ggplot(exampleDims, aes(x=x, y=y, color=z, size=table, shape=factor(cluster))) +
+  geom_point(alpha=0.25) +
+  scale_y_continuous(limits = c(2.5, 10)) +
+  scale_x_continuous(limits = c(3, 10))
+
+
+# Dimension Reduction For a Linear Model
+diamondsSegmentation <- diamonds %>% 
+  select(-x, -y, -z, -table)
+
+model7 <- lm(price ~ ., diamondsSegmentation)
+tidy(model7)
+
+bind_rows(
+  glance(model1),
+  glance(model2),
+  glance(model3),
+  glance(model4),
+  glance(model5),
+  glance(model6),
+  glance(model7))
+
 
