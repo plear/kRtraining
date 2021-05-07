@@ -3,6 +3,7 @@ library(tidyverse)
 
 # install.packages("broom")
 # install.packages("rpart")
+# install.packages("leaps")
 library(broom)
 library(rpart)
 
@@ -157,6 +158,22 @@ bind_rows(glance(model1),
           glance(model4),
           glance(model5),
           glance(model6))
+
+
+# Subset train/test 70/30 split
+trainDiamonds <- sample_frac(diamonds, 0.7)
+testDiamonds <- diamonds %>% anti_join(testDiamonds)
+
+model5Train <- lm(log(price) ~ 0 + log(carat) + cut, trainDiamonds)
+
+bind_rows(glance(model5),
+  glance(model5Train))
+
+bind_cols(testDiamonds,as_tibble(predict(model5Train, testDiamonds))) %>%
+  mutate(forecastPrice = exp(value), diff = price - forecastPrice) %>% 
+  ggplot(aes(x=price, y=diff)) + 
+  geom_point()
+
 
 ### Classification Tree ########################################################
 fit1 <- rpart(cut ~ x + y + z + table,
