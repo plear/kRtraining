@@ -122,6 +122,10 @@ augment(model2, diamonds) %>%
 
 model3 <- lm(price ~ 0 + carat + cut + carat*cut, diamonds)
 
+ggplot(data=diamonds, aes(x=carat, y=price, color=cut)) +
+  geom_point() +
+  geom_smooth(method="lm")
+
 tidy(model3)
 glance(model3)
 augment(model3)
@@ -161,7 +165,7 @@ bind_rows(glance(model1),
 
 # Subset train/test 70/30 split
 trainDiamonds <- sample_frac(diamonds, 0.7)
-testDiamonds <- diamonds %>% anti_join(testDiamonds)
+testDiamonds <- diamonds %>% anti_join(trainDiamonds)
 
 model5Train <- lm(log(price) ~ 0 + log(carat) + cut, trainDiamonds)
 
