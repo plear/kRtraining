@@ -77,9 +77,39 @@ if(x == z) {
 value
 
 
-#   Functions
+### Functions ##################################################################
+x.equals.y <- function(x,y){
+  if(x == y) {
+    print("x is equal to z")
+  } else {
+    print("x is NOT equal to z")
+  }
+}
+
+x.equals.y
+
+x.equals.y(1,1)
+x.equals.y(1,1.1)
 
 
+# Harmonic Mean of 10 & 50
+(2 * (10 * 50))/ (10 + 50) 
+
+hMean <- function(x,y) {
+  (2 * (x * y))/ (x + y) 
+}
+
+hMean
+
+hMean(5,6)
+
+hMean <- function(x,y,z=0) {
+  if(z==0){(2 * (x * y))/ (x + y)}
+  else {(3 * (x * y * z))/ (x*y + x*z + y*z)}
+}
+
+hMean(5,6)
+hMean(5,6,8)
 
 
 #   Purr
