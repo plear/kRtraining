@@ -15,16 +15,19 @@ x != y
 y != x
 y != y
 
-!(y == y)
-
 !x
 
-x & y
-x && y
+!(y == y)
 
+# And
+x & y   
+x && y  
+
+# Or
 x | y
 x || y
 
+# Exclusive Or
 xor(x, y)
 xor(x, x)
 
@@ -39,27 +42,34 @@ a != b
 a < b
 a > b
 
+"WORD" == "WORD"
+"WORD" == "word"
 
 ### Conditional Logic ##########################################################
 x <- 1
-y <- 0
-z <- 1
+y <- 1
 
-if(x == z) {
-  print("x is equal to z")
+if(x == y) {
+  print("x is equal to y")
 }
 
-z <- 2
+y <- 2
 
-if(x == z) {
-  print("x is equal to z")
+if(x == y) {
+  print("x is equal to y")
+}
+
+if(x == y) {
+  print("x is equal to y")
 } else {
-  print("x is NOT equal to z")
+  print("x is NOT equal to y")
 }
 
 value <- 0
 
-if(x == z) {
+y <- x + 1
+
+if(x == y) {
   value <- value + 1
 } else {
   value <- value + 0
@@ -67,9 +77,9 @@ if(x == z) {
 
 value
 
-z <- x
+y <- x
 
-if(x == z) {
+if(x == y) {
   value <- value + 1
 } else {
   value <- value + 0
@@ -90,8 +100,7 @@ x.equals.y <- function(x,y){
 x.equals.y
 
 x.equals.y(1,1)
-x.equals.y(1,1.1)
-
+x.equals.y(1,1.01)
 
 # Harmonic Mean of 10 & 50
 (2 * (10 * 50))/ (10 + 50) 
@@ -110,6 +119,8 @@ hMean <- function(x,y,z=0) {
   if(z==0){(2 * (x * y))/ (x + y)}
   else {(3 * (x * y * z))/ (x*y + x*z + y*z)}
 }
+
+hMean
 
 hMean(10,50)
 hMean(10,50,25)
