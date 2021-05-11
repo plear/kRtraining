@@ -1,4 +1,5 @@
 ### Programming ################################################################
+library(tidyverse)
 
 ### Logic ######################################################################
 x <- TRUE
@@ -113,6 +114,67 @@ hMean <- function(x,y,z=0) {
 hMean(10,50)
 hMean(10,50,25)
 
+### Loops ######################################################################
+
+# For Loops
+sequence <- 1:10
+
+for (val in sequence)
+{
+  print(val)
+}
+
+sequence <- 1:10 %% 2
+
+for (val in sequence)
+{
+  print(val)
+}
+
+
+# While Loops
+i <- 1
+while (i < 6) {
+  print(i)
+  i <- i + 1
+}
+
+
+# While Loops with Break
+i <- 1
+while (i < 6) {
+  print(i)
+  i <- i + 1
+  if (i == 4) {
+    break
+  }
+}
+
+
+# While Loops with If and Next  
+i <- 0
+while (i < 6) {
+  i <- i + 1
+  if (i == 3) {
+    next
+  }
+  print(i)
+}
+
+
+# Fizzbuzz Test
+for (i in 1:50) {
+  if (i %% 3 == 0 && i %% 5 == 0) {
+    print("FizzBuzz")
+  } else if (i %% 3 == 0) {
+    print("Fizz")
+  } else if (i %% 5 == 0) {
+    print("Buzz")
+  } else {
+    print(i)
+  }
+}
+
 ### Apply Functions ############################################################
 
 # apply: data frame/matrix -> vector/list/array
@@ -123,7 +185,7 @@ sum_col_m1
 
 str(sum_col_m1)
 
-# sapply: list/vector/data frame -> vector/matrix    WARNING: sapply is not always consistent
+# sapply: list/vector/data frame -> vector/matrix    WARNING: sapply is not always consistent in output class
 strings <- c("Frosted Flakes","FROSTED FLAKES","rice krispies","Rice Krispies")
 table(strings)
 
@@ -198,19 +260,23 @@ map_df(price_samples2, mean) %>%
   geom_hline(yintercept=mean(diamonds$price), linetype="dashed", color="red")
 
 
-### More Purrr ###############################################################
+### More Purrr #################################################################
 
+# Standard form
 map_dbl(diamonds, n_distinct)
 
+# Piped form
 diamonds %>%
   map_dbl(n_distinct)
 
-
+# Using purrr to create class specific models
 diamondsByCut <- diamonds %>% 
   group_by(cut) %>% 
   nest()
 
 diamondsByCut
+str(diamondsByCut)
+
 
 diamondColor_model <- function(df) {
   lm(price ~ carat + table, data = df)
@@ -225,4 +291,10 @@ diamondsByCut <- diamondsByCut %>%
 diamondsByCut %>% 
   mutate(glance = map(model, broom::glance)) %>% 
   unnest(glance)
+
+
+
+
+
+
 
