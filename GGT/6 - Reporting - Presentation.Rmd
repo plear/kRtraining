@@ -1,33 +1,94 @@
 ---
-title: "Report Presentation"
-output: ioslides_presentation
+title: "Report Presentation Example"
+output: 
+  ioslides_presentation:
+    widescreen: true
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+
+COVID_State_Daily <- read_csv("../data/COVID - State - Daily.csv", col_types = cols(year = col_integer(), 
+        month = col_integer(), day = col_integer(), 
+        statefips = col_integer(), vaccine_count = col_double(), 
+        new_vaccine_count = col_double(), 
+        new_case_rate = col_double(), vaccine_rate = col_double(), 
+        new_vaccine_rate = col_double())) %>% 
+  left_join(read_csv("../data/GeoIDs - State.csv"), by = "statefips") %>% 
+  mutate(Date = lubridate::dmy(paste(day, month, year, sep="/")))
+
 ```
 
-## R Markdown
+## Introduction
 
-This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+This is my presentation on COVID-19 Rates
+![Caption for the picture.](https://upload.wikimedia.org/wikipedia/commons/8/82/SARS-CoV-2_without_background.png){#id .class width=33% height=33%}
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
 
-## Slide with Bullets
 
-- Bullet 1
-- Bullet 2
-- Bullet 3
+## Three States
 
-## Slide with R Output
+- Michigan
+- Florida
+- North Dakota
 
-```{r cars, echo = TRUE}
-summary(cars)
+```{r function, echo = FALSE}
+stateChart <- function(stateAbb){
+  
+  stateData <- COVID_State_Daily %>% 
+    filter(stateabbrev == stateAbb) %>% 
+    select(Date, new_case_count, new_death_count, new_vaccine_count) %>% 
+    pivot_longer(c(new_case_count, new_death_count, new_vaccine_count), names_to = "measure", values_to = "value")
+  
+  ggplot(stateData, aes(x=Date, y=value, color=measure)) +
+    geom_line()
+  
+}
+
+maxNewCaseCount <- function(stateAbb){
+  max((stateData <- COVID_State_Daily %>% 
+    filter(stateabbrev == stateAbb))$new_case_count,na.rm = TRUE)
+}
+
+vacineCount <- function(stateAbb){
+  sum((stateData <- COVID_State_Daily %>% 
+    filter(stateabbrev == stateAbb))$new_vaccine_count,na.rm = TRUE)/1000
+}
+  
 ```
 
-## Slide with Plot
+## Michigan
 
-```{r pressure}
-plot(pressure)
+Michigan max new cases count was `r maxNewCaseCount("MI")`  
+Currently `r round(vacineCount("MI"),2)` thousand are vaccinated in Michigan
+
+```{r michigan, echo=FALSE, warning=FALSE}
+
+stateChart("MI")
+
 ```
 
+
+## Florida
+
+Florida max new cases count was `r maxNewCaseCount("FL")/1000` thousand  
+Currently `r round(vacineCount("FL"),2)` thousand are vaccinated in Florida
+
+```{r florida, echo=FALSE, warning=FALSE}
+
+stateChart("FL")
+
+```
+
+
+## North Dakota
+
+North Dakota max new cases count was `r maxNewCaseCount("ND")`  
+Currently `r round(vacineCount("ND"),2)` thousand are vaccinated in North Dakota
+
+```{r NorthDakota, echo=FALSE, warning=FALSE}
+
+stateChart("ND")
+
+```
