@@ -1,13 +1,152 @@
 ---
 title: "6 - Reporting"
+author: "Tony the Tiger"
 output: html_document
 ---
 
+
 ```{r setup, include=FALSE}
-# This is an R code chunk
+# This is an R code chunk - include = FALSE prevents code and results from appearing in the finished file. R Markdown still runs the code in the chunk, and the results can be used by other chunks.
+# setup is the name of the code chunk
+# you can only use a name once for the code chunk name
+
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+
+```
+***
+Example One:  
+```{r}
+# This is a code chunk with no name and no specified options
+diamondCutCount <- diamonds %>% 
+  group_by(cut) %>% 
+  count()
+
+diamondCutCount
+
+```
+***
+Example Two:  
+```{r echoFalse, echo = FALSE}
+# This is a code chunk with the name echoFalse and echo option = FALSE
+diamondCutCount <- diamonds %>% 
+  group_by(cut) %>% 
+  count()
+
+diamondCutCount
+
+```
+***
+Example Three:  
+```{r evalFalse, eval = FALSE}
+# This is a code chunk with the name evalFalse and eval option = FALSE
+diamondCutCount <- diamonds %>% 
+  group_by(cut) %>% 
+  count()
+
+diamondCutCount
+
+```
+  
+***
+Example Four:  
+```{r includeFalse, include = FALSE}
+# This is a code chunk with the name includeFalse and include option = FALSE
+diamondCutCount <- diamonds %>% 
+  group_by(cut) %>% 
+  count()
+
+diamondCutCount
+
+```
+
+***
+Example Five:    
+```{r graphics1, echo = TRUE}
+# Dislaying grapics with echo = TRUE
+diamondCutCount <- diamonds %>% 
+  group_by(cut) %>% 
+  count()
+
+ggplot(diamondCutCount, aes(x=cut, weight=n)) +
+  geom_bar()
+
+```
+  
+***
+Example Six:  
+```{r graphics2, echo = FALSE}
+# Dislaying grapics with echo = FALSE
+diamondCutCount <- diamonds %>% 
+  group_by(cut) %>% 
+  count()
+
+ggplot(diamondCutCount, aes(x=cut, weight=n)) +
+  geom_bar()
+
+```
+***
+
+# Header 1
+## Header 2
+### Header 3
+#### Header 4
+##### Header 5
+###### Header 6
+
+
+End a line with two spaces to start a new paragraph.  
+*italics* and _italics_  
+**bold** and __bold__  
+superscript^2^  
+~~strikethrough~~  
+[link](www.rstudio.com)  
+
+horizontal rule (or slide break):    
+
+***      
+
+* unordered list  
+* item 2  
+ + sub-item 1  
+ + sub-item 2  
+
+1. ordered list  
+2. item 2  
+  + sub-item 1  
+  + sub-item 2   
+ 
+ 
+Table Header | Second Header  
+------------- | -------------  
+Table Cell | Cell 2
+Cell 3 | Cell 4
+
+
+Inline Code:  
+Two to the power of eight = `r 2^8`
+
+
+***
+Interactive Plots Example:  
+```{r interactive, echo = FALSE, include = FALSE}
+# Need to add 'runtime: "shiny"' to YAML header
+# Change include to TRUE
+
+# selectInput(
+#   'cuts', label = 'Select diamond cut:',
+#   choices = unique(diamonds$cut)
+# )
+# 
+# renderPlot({
+#   
+#   ggplot((diamonds %>% 
+#            filter(cut == input$cuts)), aes(x=price)) +
+#   geom_histogram()
+#   
+# })
+
+
 ```
 
 
-This is a Markdown Document
-The following is inline code: 4 + 4 = `r 4 + 4`
