@@ -39,7 +39,8 @@ server <- function(input, output) {
                 Asian=popasian, 
                 Other=popother) %>% 
             pivot_longer(!State, names_to = "Demographics", values_to = "Total Population") %>% 
-        ggplot(aes(x=Demographics, y=`Total Population`)) +
+            mutate(`Total Population (000)` = `Total Population`/10**3) %>% 
+        ggplot(aes(x=Demographics, y=`Total Population (000)`)) +
             geom_col()
         
         
